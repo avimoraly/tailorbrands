@@ -3,11 +3,32 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "tailor-brands": {
+    "tailorbrands": {
       "projectType": "application",
       "schematics": {
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
         "@schematics/angular:component": {
-          "style": "scss"
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true
+        },
+        "@schematics/angular:module": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
         }
       },
       "root": "",
@@ -15,9 +36,9 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/tailor-brands",
+            "outputPath": "dist/tailorbrands",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -28,12 +49,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
-            "scripts": [],
-            "customWebpackConfig": {
-              "path": "webpack.config.js"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -67,23 +85,20 @@
           }
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "tailor-brands:build",
-            "customWebpackConfig": {
-              "path": "webpack.config.js"
-            }
+            "browserTarget": "tailorbrands:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "tailor-brands:build:production"
+              "browserTarget": "tailorbrands:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "tailor-brands:build"
+            "browserTarget": "tailorbrands:build"
           }
         },
         "test": {
@@ -98,7 +113,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": []
           }
@@ -120,16 +135,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "tailor-brands:serve"
+            "devServerTarget": "tailorbrands:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "tailor-brands:serve:production"
+              "devServerTarget": "tailorbrands:serve:production"
             }
           }
         }
       }
-    }
-  },
-  "defaultProject": "tailor-brands"
+    }},
+  "defaultProject": "tailorbrands"
 }
