@@ -1,10 +1,10 @@
 
-<div class="mx-auto w-40">
-  <span [routerLink]="['/']" [queryParams]="{page: activePage-1}" class="cursor-pointer outline-none" *ngIf="0 < activePage">&laquo;</span>
+<div class="mx-auto w-40 top-60px relative" *ngIf="numberOfPages" >
+  <span [routerLink]="['/']" [queryParams]="{page: activePage-1}" class="relative cursor-pointer outline-none" *ngIf="0 < activePage">&laquo;</span>
   <span [routerLink]="['/']" [queryParams]="{page: activePage-2}" class="m-4 cursor-pointer outline-none" *ngIf="0 <= activePage-2 && numberOfPages - 1 === activePage"> {{activePage-2}}</span>
   <span [routerLink]="['/']" [queryParams]="{page: activePage-1}" class="m-4 cursor-pointer outline-none" *ngIf="0 <= activePage-1"> {{activePage-1}} </span>
   <span [routerLink]="['/']" [queryParams]="{page: activePage}"   class="m-4 cursor-pointer font-bold outline-none" > {{activePage}}</span>
   <span [routerLink]="['/']" [queryParams]="{page: activePage+1}" class="m-4 cursor-pointer outline-none " *ngIf="activePage+1 < numberOfPages"> {{activePage+1}}</span>
   <span [routerLink]="['/']" [queryParams]="{page: activePage+2}" class="m-4 cursor-pointer outline-none" *ngIf="activePage+2 < numberOfPages && 0 === activePage"> {{activePage+2}}</span>
-  <span [routerLink]="['/']" [queryParams]="{page: activePage+1}" class="cursor-pointer outline-none" *ngIf="activePage < numberOfPages-1">&raquo;</span>
+  <span [routerLink]="['/']" [queryParams]="{page: activePage+1}" class="relative cursor-pointer outline-none" *ngIf="activePage < numberOfPages-1">&raquo;</span>
 </div>

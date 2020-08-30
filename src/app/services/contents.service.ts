@@ -1,17 +1,17 @@
-import { AIRTABLE_API_KEY, BASE_ID, MAX_RECORDS, MAX_RECORDS_PER_PAGE } from './constants';
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-// import { from } from 'rxjs';
-import { map, debounceTime } from 'rxjs/operators';
-import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Subscription, Subject } from 'rxjs';
+import { AIRTABLE_API_KEY, BASE_ID, MAX_RECORDS, MAX_RECORDS_PER_PAGE } from './constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContentsService {
+  pending = false;
   finish = false;
   firstLoad = true;
   $contents: BehaviorSubject <any[]> = new BehaviorSubject([]);
+  $error: Subject<any> = new Subject();
   subContents: Subscription = null;
   readonly headers = new HttpHeaders ({
     'Content-Type': 'application/json',
@@ -29,7 +29,6 @@ export class ContentsService {
 
   loadRecordForPage(page: number): void {
     this.subContents = this.$contents.subscribe(data => {
-      console.log("subContents", data.length, page * MAX_RECORDS_PER_PAGE)
       if (data.length  <= page * (MAX_RECORDS_PER_PAGE)+ MAX_RECORDS ) {
         this.getMoreAirtableContent();
       } else {
@@ -41,8 +40,10 @@ export class ContentsService {
   }
 
   getMoreAirtableContent(): any {
+    if (this.pending) {
+      return;
+    }
     let currUrl = this.url;
-    console.log('getMoreAirtableContent')
     if (this.nextPageOffset && this.nextPageOffset !== 'finish') {
       currUrl += `&offset=${this.nextPageOffset}`;
     }
@@ -50,13 +51,15 @@ export class ContentsService {
     if (this.nextPageOffset === 'finish') {
       return;
     }
-console.log('currUrl', currUrl)
+
+    this.pending = true;
     this.http.get<any>(currUrl, { headers: this.headers }).subscribe(res => {
         let moreContent: any;
         this.nextPageOffset = res.offset || 'finish';
         moreContent = res.records.map(record => {
           if (!record || !record.fields ) {
             return [];
+
           }
           return {
             headline: record.fields.Headline,
@@ -66,8 +69,12 @@ console.log('currUrl', currUrl)
           };
         });
         this.content = [...this.content, ...moreContent];
-        console.log('this.content', this.content);
         this.$contents.next(this.content);
+        this.pending = false;
+    }, error => {
+      console.log('error', error)
+      this.pending = false;
+      this.$error.next(error);
     });
   }
 }

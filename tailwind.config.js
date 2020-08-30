@@ -1,6 +1,12 @@
 module.exports = {
   purge: [],
   theme: {
+    inset: {
+      '0': 0,
+      'auto': 'auto',
+      '1/2': '50%',
+      '60px': '60px'
+    },
     minWidth: {
       '0': '0',
       'middle': '200px',
@@ -18,6 +24,7 @@ module.exports = {
       '4': '1rem',
       '20': '5rem',
       '40': '12rem',
+      'full': '100%',
     },
     height: {
       'box': "330px",
