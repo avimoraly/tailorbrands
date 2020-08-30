@@ -1,46 +1,62 @@
+import { AIRTABLE_API_KEY, BASE_ID, MAX_RECORDS, MAX_RECORDS_PER_PAGE } from './constants';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 // import { from } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, debounceTime } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContentsService {
-
-  readonly AIRTABLE_API_KEY = 'key6VSRSDY81TzV65';
-  readonly BASE_ID = 'appNiIkUZslW09j9H';
-  readonly MAX_RECORDS = 12;
+  finish = false;
+  firstLoad = true;
+  $contents: BehaviorSubject <any[]> = new BehaviorSubject([]);
+  subContents: Subscription = null;
   readonly headers = new HttpHeaders ({
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${this.AIRTABLE_API_KEY}`
+    Authorization: `Bearer ${AIRTABLE_API_KEY}`
   });
 
-  url = `https://api.airtable.com/v0/${this.BASE_ID}/Content`;
-  nextPageOffset = '';
+  url = `https://api.airtable.com/v0/${BASE_ID}/Content`;
+  nextPageOffset = null;
 
   content: any[] = [];
+
   constructor(private http: HttpClient) {
-    this.url += `?fields[]=Headline&fields[]=Sub-headline&fields[]=Header image&pageSize=${this.MAX_RECORDS}`;
+    this.url += `?fields[]=Headline&fields[]=Sub-headline&fields[]=Header%20image&pageSize=${MAX_RECORDS}`;
+  }
+
+  loadRecordForPage(page: number): void {
+    this.subContents = this.$contents.subscribe(data => {
+      console.log("subContents", data.length, page * MAX_RECORDS_PER_PAGE)
+      if (data.length  <= page * (MAX_RECORDS_PER_PAGE)+ MAX_RECORDS ) {
+        this.getMoreAirtableContent();
+      } else {
+        if (this.subContents) {
+          this.subContents.unsubscribe();
+        }
+      }
+    });
   }
 
   getMoreAirtableContent(): any {
-
     let currUrl = this.url;
-    // console.log('this.nextPageOffset', this.nextPageOffset)
-    if (this.nextPageOffset) {
-      currUrl += '?offset=this.nextPageOffset';
+    console.log('getMoreAirtableContent')
+    if (this.nextPageOffset && this.nextPageOffset !== 'finish') {
+      currUrl += `&offset=${this.nextPageOffset}`;
     }
-    // let currUrl = this.url +
-    console.log('this.url', this.url)
-    return this.http.get<any>(currUrl, { headers: this.headers }).pipe(
-      map(res => {
+
+    if (this.nextPageOffset === 'finish') {
+      return;
+    }
+console.log('currUrl', currUrl)
+    this.http.get<any>(currUrl, { headers: this.headers }).subscribe(res => {
         let moreContent: any;
-        console.log('res', res);
-        this.nextPageOffset = res.offset;
+        this.nextPageOffset = res.offset || 'finish';
         moreContent = res.records.map(record => {
-          if (!record || !record.fields) {
-            return null;
+          if (!record || !record.fields ) {
+            return [];
           }
           return {
             headline: record.fields.Headline,
@@ -49,11 +65,9 @@ export class ContentsService {
                       record.fields['Header image'][0] : null
           };
         });
-        console.log('moreContent', moreContent);
         this.content = [...this.content, ...moreContent];
         console.log('this.content', this.content);
-        return this.content;
-      })
-    );
+        this.$contents.next(this.content);
+    });
   }
 }

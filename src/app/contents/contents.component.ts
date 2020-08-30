@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ContentsService } from '../services/contents.service';
+import { MAX_RECORDS_PER_PAGE } from '../services/constants';
 
 @Component({
   selector: 'app-contents',
@@ -7,22 +8,16 @@ import { ContentsService } from '../services/contents.service';
   styleUrls: ['./contents.component.css']
 })
 export class ContentsComponent implements OnInit {
-
+  @Input() activePage = 0;
+  numberOfRecoredInPage = MAX_RECORDS_PER_PAGE;
   gotError = false;
   loading = true;
   contents = [];
 
   constructor(private contentsService: ContentsService) {
-    this.contentsService.getMoreAirtableContent().subscribe(
-      res => {
-        this.contents = res;
-        console.log('contents', this.contents);
-      },
-      e => {
-        this.gotError = true;
-        console.error('err', e);
-      }
-    );
+    this.contentsService.$contents.subscribe(contents => {
+      this.contents = contents;
+    });
   }
 
   ngOnInit(): void {

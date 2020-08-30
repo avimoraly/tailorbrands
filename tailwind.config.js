@@ -9,9 +9,15 @@ module.exports = {
       '3/4': '75%',
       'full': '100%',
     },
+    maxWidth: {
+      'container': '1700px'
+    },
     width: {
       'middle': '400px',
-      '1/3': '25%'
+      '1/3': '25%',
+      '4': '1rem',
+      '20': '5rem',
+      '40': '12rem',
     },
     height: {
       'box': "330px",
