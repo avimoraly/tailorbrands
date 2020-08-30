@@ -1,0 +1,11 @@
+
+<div class="bg-blue-300 h-full">
+  <h1 *ngIf="contents.length === 0 && !gotError" >Loading...</h1>
+  <h1 *ngIf="gotError" >We have a problem...</h1>
+
+  <div *ngIf="contents && contents.length !== 0" class="container mx-auto px-2 sm:flex flex-wrap w-11/12 content-center justify-center" >
+    <div *ngFor="let content of contents | slice:0:50" class="flex m-4  flex-shrink-0">
+      <app-content class="rounded" [content]="content"></app-content>
+    </div>
+  </div>
+</div>

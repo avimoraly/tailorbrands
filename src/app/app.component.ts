@@ -7,20 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'tailor-brands';
-  gotError = false;
-  loading = true;
-  contents = [];
-  constructor(private contentsService: ContentsService) {
-    this.contentsService.getMoreAirtableContent().subscribe(
-      res => {
-        this.contents = res;
-        console.log('contents', this.contents);
-      },
-      e => {
-        this.gotError = true;
-        console.error('err', e);
-      }
-    );
+
+  constructor() {
+
   }
 }

@@ -1,10 +1,7 @@
-<div >
-  <div>
-    <img class="object-cover" [src]="content?.image?.url" >
-    <h2>{{content.headline}}</h2>
-    <h3 >{{content.subHeadline}}</h3>
+<div class="font-bold">
+  <div class='p-3 mx-auto border-solid border-2 border-gray-600 bg-white h-64 shadow-xl mx-auto rounded-sm w-middle h-box'>
+    <img class="object-cover rounded-lg min-w-full w-full h-7/10" [src]="content?.image?.url" >
+    <h1 class="text-l text-grey-900 leading-normal font-bold m-1 text-lg ">{{content.headline}}</h1>
+    <h3 class="text-indigo-500 truncate">{{content.subHeadline}}</h3>
   </div>
-
-
-
 </div>

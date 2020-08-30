@@ -3,3 +3,22 @@
 @tailwind components;
 
 @tailwind utilities;
+
+.image-width-large {
+  width: 350px;
+}
+
+.image-width-md {
+  width: 300px;
+}
+
+.image-width-sm {
+  width: 400px;
+}
+
+@media (max-width: 768px) {
+  .image-width {
+    width: 400px;
+  }
+
+}
